@@ -39,30 +39,15 @@ target_include_directories(detector
 option(BUILD_DETECTOR_EXAMPLES "Build example executables for detector" ON)
 
 if(BUILD_DETECTOR_EXAMPLES)
-    # 示例 1：内存 & 死锁检测演示
+    # 示例：内存 & 死锁检测演示
     add_executable(leak_detector_main
         src/leak_detector_main.cpp
     )
 
-    # 这里链接 detector 库以及 pthread / dl
-    # 虽然示例用的是 dlopen/dlsym，但链接进来不会有坏处，方便后续扩展
     target_link_libraries(leak_detector_main
         PRIVATE
             detector
             Threads::Threads
             ${EXTRA_DL_LIBS}
     )
-
-    # 示例 2：PLT hook 演示（printf hook）
-    add_executable(plthook_demo
-        src/plthook_main.cpp
-    )
-
-    target_link_libraries(plthook_demo
-        PRIVATE
-            detector          # 内含 PLTHook 实现
-            Threads::Threads
-            ${EXTRA_DL_LIBS}
-    )
 endif()
-
