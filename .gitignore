@@ -1,0 +1,7 @@
+a.out
+.vscode
+*.log
+*.o
+*.out
+
+/build
