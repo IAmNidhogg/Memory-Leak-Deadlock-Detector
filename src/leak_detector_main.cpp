@@ -20,7 +20,9 @@ Detector_RegisterMain DetectorRegisterMain = nullptr;
 Detector_Init DetectorInit = nullptr;
 
 void OpenDetector() {
-  lib_handle = dlopen("/mnt/d/project/camping/detector/detector.so", RTLD_LAZY);
+  lib_handle = dlopen(
+      "/home/iamnidhogg/Memory-Leak-Deadlock-Detector/build/libdetector.so",
+      RTLD_LAZY);
   if (!lib_handle) {
     std::cerr << "Failed to load library: " << dlerror() << std::endl;
     return;
