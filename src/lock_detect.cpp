@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "output_control.hpp"
-#include "plthook.h"
+#include "plthook.hpp"
 
 namespace tracker {
 
