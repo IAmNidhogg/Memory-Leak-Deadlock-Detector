@@ -11,9 +11,9 @@
 #include <string>
 #include <time.h>
 
-#include "lock_detect.h"
-#include "memory_detect.h"
-#include "output_control.h"
+#include "lock_detect.hpp"
+#include "memory_detect.hpp"
+#include "output_control.hpp"
 
 /**
  * @brief 生成输出文件路径
