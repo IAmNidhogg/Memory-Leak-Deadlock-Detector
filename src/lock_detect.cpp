@@ -359,7 +359,28 @@ void LockTracker::PrintLockInfo(const LockInfo &info) const {
       backtrace_symbols(info.callstack.data(), info.callstack.size());
   if (symbols) {
     for (size_t i = 0; i < info.callstack.size(); ++i) {
-      TRACKER_PRINT("  [%zu] %s\n", i, symbols[i]);
+      void *abs_addr = info.callstack[i];
+      Dl_info dlinfo;
+      if (dladdr(abs_addr, &dlinfo)) {
+        void *rel_addr =
+            (void *)((char *)abs_addr - (char *)dlinfo.dli_fbase);
+        TRACKER_PRINT("  [%zu] Absolute: %p, Relative: %p\n", i, abs_addr,
+                      rel_addr);
+        TRACKER_PRINT("      Module: %s\n", dlinfo.dli_fname);
+        char cmd[256];
+        snprintf(cmd, sizeof(cmd), "addr2line -e %s -f -C -p %p",
+                 dlinfo.dli_fname, rel_addr);
+        FILE *pipe = popen(cmd, "r");
+        if (pipe) {
+          char line[256];
+          if (fgets(line, sizeof(line), pipe)) {
+            TRACKER_PRINT("      Source: %s", line);
+          }
+          pclose(pipe);
+        }
+      } else {
+        TRACKER_PRINT("  [%zu] %s\n", i, symbols[i]);
+      }
     }
     free(symbols);
   }
@@ -546,3 +567,4 @@ void LockDetect::RegisterMain() { impl_->RegisterMain(); }
 void LockDetect::Start() { impl_->Start(); }
 
 void LockDetect::Detect() { impl_->Detect(); }
+
